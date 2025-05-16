@@ -25,7 +25,10 @@ const RequestSchema = new mongoose.Schema({
 const RequestModel = mongoose.model("Request", RequestSchema);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://form-e-service.vercel.app",
+  methods: ["GET", "POST"]
+}));
 app.use(bodyParser.json());
 
 // Routes
