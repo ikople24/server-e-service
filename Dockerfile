@@ -1,13 +1,20 @@
-FROM node:18-alpine
-RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
-RUN apk add --no-cache dumb-init
+# ใช้ Node.js base image
+FROM node:18
+
+# ตั้ง working directory
 WORKDIR /app
+
+# คัดลอกไฟล์ package.json และ package-lock.json
 COPY package*.json ./
-RUN npm ci
+
+# ติดตั้ง dependencies
+RUN npm install
+
+# คัดลอกไฟล์โปรเจกต์ทั้งหมด
 COPY . .
-RUN addgroup -g 1001 appgroup && \
-    adduser -D -u 1001 -G appgroup appuser && \
-    chown -R appuser /app
-USER appuser
-ENTRYPOINT ["dumb-init", "--"]
+
+# ตั้งค่า port ที่ Railway จะใช้
+EXPOSE 3002
+
+# คำสั่งรันโปรเจกต์
 CMD ["npm", "start"]
