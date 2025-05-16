@@ -25,10 +25,16 @@ const RequestSchema = new mongoose.Schema({
 const RequestModel = mongoose.model("Request", RequestSchema);
 
 // Middleware
-app.use(cors({
-  origin: "https://form-e-service.vercel.app",
-  methods: ["GET", "POST"]
-}));
+app.use(cors());
+app.options('*', cors()); // รองรับ preflight
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://form-e-service.vercel.app");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  next();
+});
+
 app.use(bodyParser.json());
 
 // Routes
